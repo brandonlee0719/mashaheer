@@ -1,13 +1,10 @@
-import React, { useState } from 'react';
+import { useMutation } from '@apollo/client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useState } from 'react';
+import { LOGIN_USER } from '../../gqloperations/mutation';
 
-type User = null | {
-  username: string;
-  email: string;
-  confirmed: boolean;
-  isInfluencer: boolean;
-  token: string;
-};
+
+
 
 export const AuthContext = React.createContext<{
   user: User;

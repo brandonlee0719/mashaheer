@@ -11,6 +11,7 @@ export const Providers: React.FC<ProvidersProps> = ({}) => {
   const client = new ApolloClient({
     uri: 'https://dashboard.mashaheer.online/graphql',
     cache: new InMemoryCache(),
+    
   });
 
   return (

@@ -1,26 +1,59 @@
-import React, { useContext } from 'react';
+import { useMutation } from '@apollo/client';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useContext, useState } from 'react';
 import {
-  Text,
-  StyleSheet,
-  View,
-  KeyboardAvoidingView,
-  StatusBar,
-  TouchableWithoutFeedback,
-  Dimensions,
+  Dimensions, KeyboardAvoidingView,
+  StatusBar, StyleSheet, Text, TouchableWithoutFeedback, View
 } from 'react-native';
-import { AuthNavProps } from '../../navigation/AuthNavigator/AuthParamList';
-import { AuthContext } from '../../navigation';
-import { RoundedButton } from '../../components/buttons/RoundedButton';
 import { BorderlessButton } from 'react-native-gesture-handler';
+import { RoundedButton } from '../../components/buttons/RoundedButton';
 import { InputField } from '../../components/Form';
+import { LOGIN_USER } from '../../gqloperations/mutation';
 import { EmailIcon, PasswordIcon, ShowOnIcon } from '../../img/Icons';
+import { AuthContext } from '../../navigation';
+import { AuthNavProps } from '../../navigation/AuthNavigator/AuthParamList';
 // import { Loader } from '../../components/Loder/Loader';
 import colors from '../../styles/colors';
 
 const windowWidth = Dimensions.get('window').width;
 
+
+// type UsersPermissionsLoginInput {
+//   identifier: String!
+//   password: String!
+//   provider: String! = "local"
+// }
+
 export function LoginScreen({ navigation }: AuthNavProps<'LoginScreen'>) {
   const { login } = useContext(AuthContext);
+
+  const [emailAddress, setEmailAddress] = useState("")
+  const [password, setPassword] = useState("")
+
+ 
+  const [user, setUser] = useState<User>(null);
+
+  const [loginUser, { error, loading, data }] = useMutation(LOGIN_USER,{
+    onCompleted:(data)=>{
+      console.log("log in success full................")
+      setUser(data.login.user)
+      AsyncStorage.setItem('user', JSON.stringify(data.login.user))
+      alert("login successfull");
+      // navigation.replace("AccountTypeScreen")
+    },
+    onError:(err)=>{
+      console.warn("Something went wrong.")
+    },
+  })
+
+
+  if (loading) {
+    console.log("logging user..................")
+  }
+
+
+
+
   return (
     <View style={styles.wrapper}>
       <StatusBar barStyle="light-content" />
@@ -36,8 +69,8 @@ export function LoginScreen({ navigation }: AuthNavProps<'LoginScreen'>) {
               keyboardType={'email-address'}
               placeholder={'Email Address'}
               selectionColor={colors.blue04}
-              // value={emailAddress}
-              // onChangeText={setEmailAddress}
+              value={emailAddress}
+              onChangeText={setEmailAddress}
               secureTextEntry={false}
               placeholderTextColor={colors.gray02}
             />
@@ -52,8 +85,8 @@ export function LoginScreen({ navigation }: AuthNavProps<'LoginScreen'>) {
             <InputField
               keyboardType={'default'}
               placeholder={'Password'}
-              // value={password}
-              // onChangeText={setPassword}
+              value={password}
+              onChangeText={setPassword}
               secureTextEntry
               selectionColor={colors.black01}
               placeholderTextColor={colors.gray02}
@@ -73,7 +106,24 @@ export function LoginScreen({ navigation }: AuthNavProps<'LoginScreen'>) {
             label={'Continue'}
             // variant={'primary'}
             onPress={() => {
-              login();
+
+
+              if(emailAddress.length > 3 && password.length>5){
+                loginUser({
+                  variables: {
+                    input: {
+                      "identifier": emailAddress,
+                      "password": password,
+                      "provider": "local"
+                    }
+                  }
+                })
+              }else{
+              console.warn("Mandotary fields are empty.")
+
+              }
+
+            
             }}
             style={{
               marginTop: 40,
@@ -94,6 +144,8 @@ export function LoginScreen({ navigation }: AuthNavProps<'LoginScreen'>) {
     </View>
   );
 }
+
+
 
 const styles = StyleSheet.create({
   wrapper: {

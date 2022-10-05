@@ -1,8 +1,5 @@
-import React, { useState } from 'react';
-import { Text } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { gql, useMutation } from '@apollo/client';
-import { Loader } from '../../components/Loder/Loader';
+import React, { useState } from 'react';
 
 type User = null | {
   identifier: string;
