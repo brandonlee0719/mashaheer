@@ -30,18 +30,18 @@ export function LoginScreen({ navigation }: AuthNavProps<'LoginScreen'>) {
   const [emailAddress, setEmailAddress] = useState("")
   const [password, setPassword] = useState("")
 
- 
+
   const [user, setUser] = useState<User>(null);
 
-  const [loginUser, { error, loading, data }] = useMutation(LOGIN_USER,{
-    onCompleted:(data)=>{
+  const [loginUser, { error, loading, data }] = useMutation(LOGIN_USER, {
+    onCompleted: (data) => {
       console.log("log in success full................")
       setUser(data.login.user)
       AsyncStorage.setItem('user', JSON.stringify(data.login.user))
       alert("login successfull");
       // navigation.replace("AccountTypeScreen")
     },
-    onError:(err)=>{
+    onError: (err) => {
       console.warn("Something went wrong.")
     },
   })
@@ -101,6 +101,7 @@ export function LoginScreen({ navigation }: AuthNavProps<'LoginScreen'>) {
           </View>
         </View>
 
+
         <View style={styles.continueBtnWrapper}>
           <RoundedButton
             label={'Continue'}
@@ -108,7 +109,7 @@ export function LoginScreen({ navigation }: AuthNavProps<'LoginScreen'>) {
             onPress={() => {
 
 
-              if(emailAddress.length > 3 && password.length>5){
+              if (emailAddress.length > 3 && password.length > 5) {
                 loginUser({
                   variables: {
                     input: {
@@ -118,23 +119,44 @@ export function LoginScreen({ navigation }: AuthNavProps<'LoginScreen'>) {
                     }
                   }
                 })
-              }else{
-              console.warn("Mandotary fields are empty.")
+              } else {
+                console.warn("Mandotary fields are empty.")
 
               }
 
-            
+
             }}
             style={{
-              marginTop: 40,
-              marginBottom: 200,
+              marginTop: 20,
               width: windowWidth / 1.2,
               height: windowWidth / 6.8,
             }}
           />
         </View>
 
-        <BorderlessButton onPress={() => navigation.navigate('AccountTypeScreen')}>
+
+        <View style={styles.continueBtnWrapper} >
+        
+          <Text
+          style = {{
+            textAlign:"center",
+            marginTop: 40,
+              marginBottom: 200,
+          }}
+          onPress={()=>navigation.navigate('RegisterScreen')}
+          >Register! if not registered.</Text>
+
+        
+        </View>
+
+       
+
+       
+
+        <BorderlessButton onPress={() => navigation.navigate('AccountTypeScreen')
+
+
+        }>
           <View style={styles.createAccountTextWrapper}>
             <Text style={styles.createAccountText01}>Don't have an account?</Text>
             <Text style={styles.createAccountText02}>Sign Up</Text>
@@ -148,6 +170,15 @@ export function LoginScreen({ navigation }: AuthNavProps<'LoginScreen'>) {
 
 
 const styles = StyleSheet.create({
+
+  labelClass:{
+    fontSize:20,
+    fontWeight:"bold",
+    backgroundColor:"red",
+    width:100,
+    height:199    
+
+  },
   wrapper: {
     flex: 1,
     backgroundColor: colors.white03,

@@ -15,3 +15,24 @@ export const LOGIN_USER = gql`
     }  
     }
 `
+
+export const REGISTER_USER = gql`
+    mutation register($input:UsersPermissionsRegisterInput!){
+        register(input:$input){
+            jwt
+        user {
+        id
+        username
+        email
+        confirmed
+        blocked
+        role {
+            id
+            name
+            description
+            type
+        }
+        }
+    }  
+    }
+`

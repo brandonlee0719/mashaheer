@@ -1,7 +1,7 @@
 import React from 'react';
 import { Image, StatusBar, StyleSheet, Text, View } from 'react-native';
-import { AuthNavProps } from '../../navigation/AuthNavigator/AuthParamList';
 import { RoundedButton } from '../../components/buttons/RoundedButton';
+import { AuthNavProps } from '../../navigation/AuthNavigator/AuthParamList';
 import colors from '../../styles/colors';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 import { gql, useQuery } from '@apollo/client';

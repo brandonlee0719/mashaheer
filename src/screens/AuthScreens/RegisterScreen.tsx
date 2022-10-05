@@ -1,26 +1,53 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import {
-  Text,
-  StyleSheet,
-  View,
-  KeyboardAvoidingView,
-  StatusBar,
-  TouchableWithoutFeedback,
-  Dimensions,
+  Dimensions, KeyboardAvoidingView,
+  StatusBar, StyleSheet, Text, TouchableWithoutFeedback, View
 } from 'react-native';
-import { AuthNavProps } from '../../navigation/AuthNavigator/AuthParamList';
-import { AuthContext } from '../../navigation';
-import { RoundedButton } from '../../components/buttons/RoundedButton';
+
+import { useMutation } from '@apollo/client';
 import { BorderlessButton } from 'react-native-gesture-handler';
+import { RoundedButton } from '../../components/buttons/RoundedButton';
 import { InputField } from '../../components/Form';
+import { REGISTER_USER } from '../../gqloperations/mutation';
 import { EmailIcon, PasswordIcon, ShowOnIcon } from '../../img/Icons';
+import { AuthContext } from '../../navigation';
+import { AuthNavProps } from '../../navigation/AuthNavigator/AuthParamList';
 import colors from '../../styles/colors';
 
 const windowWidth = Dimensions.get('window').width;
 
 export function RegisterScreen({ navigation, route }: AuthNavProps<'RegisterScreen'>) {
-  console.log(route.params.isInfluencer);
+  // console.log(route.params.isInfluencer);
   const { login } = useContext(AuthContext);
+
+  const [emailAddress, setEmailAddress] = useState("")
+  const [password, setPassword] = useState("")
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
+  const [phone, setPhone] = useState("")
+  
+  const [user, setUser] = useState<User>(null);
+
+
+  const [registerUser, { error, loading, data }] = useMutation(REGISTER_USER,{
+    onCompleted:(data)=>{
+      console.log("register in success full................")
+      // setUser(data.login.user)
+      // AsyncStorage.setItem('user', JSON.stringify(data.login.user))
+      alert("register successfull, please login.");
+    
+    },
+    onError:(err)=>{
+      console.warn("Something went wrong.",err.message)
+    },
+  })
+
+
+  if (loading) {
+    console.log("logging user..................")
+  }
+
+
   return (
     <View style={styles.wrapper}>
       <StatusBar barStyle="light-content" />
@@ -34,6 +61,8 @@ export function RegisterScreen({ navigation, route }: AuthNavProps<'RegisterScre
               keyboardType={'default'}
               placeholder={'First Name'}
               autoCapitalize={'none'}
+              value = {firstName}
+              onChangeText  = {setFirstName}
               selectionColor={colors.blue04}
               placeholderTextColor={colors.gray02}
             />
@@ -43,6 +72,8 @@ export function RegisterScreen({ navigation, route }: AuthNavProps<'RegisterScre
               keyboardType={'default'}
               placeholder={'Last Name'}
               autoCapitalize={'none'}
+              value = {lastName}
+              onChangeText  = {setLastName}
               selectionColor={colors.blue04}
               placeholderTextColor={colors.gray02}
             />
@@ -58,6 +89,8 @@ export function RegisterScreen({ navigation, route }: AuthNavProps<'RegisterScre
               keyboardType={'email-address'}
               placeholder={'Email Address'}
               autoCapitalize={'none'}
+              value = {emailAddress}
+              onChangeText  = {setEmailAddress}
               selectionColor={colors.blue04}
               placeholderTextColor={colors.gray02}
             />
@@ -73,6 +106,8 @@ export function RegisterScreen({ navigation, route }: AuthNavProps<'RegisterScre
               keyboardType={'numeric'}
               placeholder={'Mobile Number'}
               autoCapitalize={'none'}
+              value = {phone}
+              onChangeText  = {setPhone}
               selectionColor={colors.blue04}
               placeholderTextColor={colors.gray02}
             />
@@ -88,6 +123,8 @@ export function RegisterScreen({ navigation, route }: AuthNavProps<'RegisterScre
               keyboardType={'default'}
               placeholder={'Password'}
               secureTextEntry
+              value = {password}
+              onChangeText  = {setPassword}
               selectionColor={colors.black01}
               autoCapitalize={'none'}
               placeholderTextColor={colors.gray02}
@@ -102,19 +139,50 @@ export function RegisterScreen({ navigation, route }: AuthNavProps<'RegisterScre
           </View>
         </View>
 
+       
+
         <View style={styles.continueBtnWrapper}>
           <RoundedButton
             label={'Continue'}
             // variant={'primary'}
-            onPress={() => login()}
+            onPress={() => {
+
+              if(firstName.length>2 && emailAddress.length>5 && password.length>4){
+                registerUser({
+                  variables:{
+                    input:{
+                      "username": emailAddress,
+                      "email": emailAddress,
+                      "password": password
+                    }
+                  }
+                })
+              }
+
+            }}
             style={{
-              marginTop: 40,
-              marginBottom: 200,
+              marginTop: 10,
               width: windowWidth / 1.2,
               height: windowWidth / 6.8,
             }}
           />
         </View>
+
+        <View style={styles.continueBtnWrapper} >
+        
+        <Text
+        style = {{
+          textAlign:"center",
+          marginTop:-20
+        
+        }}
+        onPress={()=>navigation.navigate('LoginScreen')}
+        >Already registered! Login.</Text>
+
+      
+      </View>
+
+        
 
         <BorderlessButton onPress={() => navigation.navigate('LoginScreen')}>
           <View style={styles.createAccountTextWrapper}>
