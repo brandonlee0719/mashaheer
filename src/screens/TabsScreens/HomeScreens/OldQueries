@@ -1,0 +1,63 @@
+
+// const CATANDINFQUERY = gql`
+//   query GetTechCategory($id: ID!) {
+//     category(id: $id) {
+//       influencers {
+//         id
+//         name
+//         username
+//         email
+//         nmc
+//         about
+//         photo {
+//           url
+//         }
+//         products {
+//           id
+//         }
+//       }
+//     }
+//     influencers {
+//       id
+//       name
+//       username
+//       email
+//       nmc
+//       about
+//       photo {
+//         url
+//       }
+//       products {
+//         id
+//       }
+//     }
+//   }
+// `;
+
+// const INFQUERY = gql`
+//   query GetInfluencers {
+//     influencers {
+//       data {
+//         id
+//         attributes {
+//           infAbout
+//           infNmcLicenseNo
+//           infImages {
+//             data {
+//               attributes {
+//                 url
+//               }
+//             }
+//           }
+//           categories {
+//             data {
+//               attributes {
+//                 catName
+//               }
+//             }
+//           }
+//         }
+//       }
+//     }
+//   }
+// `;
